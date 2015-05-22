@@ -4,6 +4,7 @@ import android.animation.TimeInterpolator;
 import android.graphics.Bitmap;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,8 +60,8 @@ public class ReadingPageActivity extends ActionBarActivity {
                 mImageView.getLocationOnScreen(screenLocation);
                 mLeftDelta = thumbnailLeft - screenLocation[0];
                 mTopDelta = thumbnailTop - screenLocation[1];
-
-                // Scale factors to make the large version the same size as the thumbnail
+                Log.d("wtf","thumbanailLeft: " + thumbnailLeft + " thumbnailTop : "
+                        + thumbnailTop + "x: "+screenLocation[0] + "y :"+screenLocation[1]);
                 mWidthScale = (float) thumbnailWidth / mImageView.getWidth();
                 mHeightScale = (float) thumbnailHeight / mImageView.getHeight();
 
@@ -71,6 +72,7 @@ public class ReadingPageActivity extends ActionBarActivity {
     }
 
     private void runEnterAnimation() {
+
 
         mBackgroundView.setPivotX(0);
         mBackgroundView.setPivotY(0);
@@ -83,20 +85,24 @@ public class ReadingPageActivity extends ActionBarActivity {
                 translationX(0).translationY(0).
                 setInterpolator(sDecelerator).start();
 
-
         mImageView.setPivotX(0);
         mImageView.setPivotY(0);
         mImageView.setScaleX(mWidthScale);
         mImageView.setScaleY(mHeightScale);
         mImageView.setTranslationX(mLeftDelta);
         mImageView.setTranslationY(mTopDelta);
-        mImageView.animate().setDuration(ANIM_DURATION).
 
+        mImageView.animate().setDuration(ANIM_DURATION).
                 scaleX(1).scaleY(1).
+                withStartAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mImageView.animate().rotationY(-180).setDuration(ANIM_DURATION)
+                                .setInterpolator(sDecelerator).start();
+                    }
+                }).
                 translationX(0).translationY(0).
                 setInterpolator(sDecelerator).start();
-        mImageView.animate().rotationY(-180).setDuration(ANIM_DURATION)
-                .setInterpolator(sDecelerator).start();
 
     }
 
@@ -115,6 +121,7 @@ public class ReadingPageActivity extends ActionBarActivity {
                 scaleX(mWidthScale).scaleY(mHeightScale).
                 translationX(mLeftDelta).translationY(mTopDelta).
                 withEndAction(endAction);
+
         mImageView.animate().setDuration(ANIM_DURATION).
                 scaleX(mWidthScale).scaleY(mHeightScale).
                 translationX(mLeftDelta).translationY(mTopDelta).

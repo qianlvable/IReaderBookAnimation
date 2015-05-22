@@ -23,12 +23,12 @@ public class Util {
             R.drawable.cover8,
             R.drawable.cover9
     };
-    public static ArrayList<PictureData> loadThunmbnails(Resources resources) {
+    public static ArrayList<PictureData> loadThunmbnails(Resources resources,int width) {
         ArrayList<PictureData> thumbnails = new ArrayList<PictureData>();
         for (int i = 0; i < mPhotos.length; ++i) {
             int resourceId = mPhotos[i];
             Bitmap bitmap = getBitmap(resources, resourceId);
-            Bitmap thumbnail = getThumbnail(bitmap, 230);
+            Bitmap thumbnail = getThumbnail(bitmap, width);
             thumbnails.add(new PictureData(resourceId,thumbnail));
         }
         return thumbnails;
@@ -54,15 +54,10 @@ public class Util {
         int width = original.getWidth();
         int height = original.getHeight();
         int scaledWidth, scaledHeight;
-        if (width >= height) {
-            float scaleFactor = (float) maxDimension / width;
-            scaledWidth = 200;
-            scaledHeight = (int) (scaleFactor * height);
-        } else {
-            float scaleFactor = (float) maxDimension / height;
-            scaledWidth = (int) (scaleFactor * width);
-            scaledHeight = 200;
-        }
+        float scaleFactor = (float) maxDimension / height;
+        scaledWidth = (int) (scaleFactor * width);
+        scaledHeight = (int) (scaleFactor * height);
+
         Bitmap thumbnail = Bitmap.createScaledBitmap(original, scaledWidth, scaledHeight, true);
 
         return thumbnail;

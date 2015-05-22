@@ -1,17 +1,13 @@
 package com.lvable.ireaderanimationrepo;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -29,11 +25,15 @@ public class MainActivity extends ActionBarActivity{
         mGridLayout.setColumnCount(3);
         mGridLayout.setUseDefaultMargins(true);
 
-        ArrayList<PictureData> thumbnails = Util.loadThunmbnails(getResources());
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        Log.d("width",width + "");
+        // Todo: get runtime screen width
+        ArrayList<PictureData> thumbnails = Util.loadThunmbnails(getResources(), (int) (width*0.4));
         for (int i = 0; i < thumbnails.size();i++){
             ImageView imageView = new ImageView(this);
             imageView.setImageBitmap(thumbnails.get(i).thumbnail);
-            imageView.setPivotX(0);
             mGridLayout.addView(imageView);
             imageView.setOnClickListener(thumbnailClickListener);
             mThumbnailData.put(imageView,thumbnails.get(i));
